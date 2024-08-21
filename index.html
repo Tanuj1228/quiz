@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(168, 213, 255);
+        }
+
+        .quiz-container {
+            width: 50%;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .quiz-container:hover {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            transition: 0.5s ease-in-out;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #quiz {
+            margin-bottom: 20px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .options {
+            margin: 10px 0;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #results {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Interactive Quiz Session</h1>
+        <div id="quiz"></div>
+        <button id="submit">Submit My Quiz</button>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const quizData = [
+            { question: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Lisbon"], correct: "Paris" },
+            { question: "Which is the largest planet in the Solar System?", options: ["Earth", "Mars", "Jupiter", "Saturn"], correct: "Jupiter" },
+            { question: "Who wrote 'Romeo and Juliet'?", options: ["William Shakespeare", "Charles Dickens", "Mark Twain", "Jane Austen"], correct: "William Shakespeare" },
+            { question: "What is the largest mammal in the world?", options: ["Elephant", "Giraffe", "Blue Whale", "Great White Shark"], correct: "Blue Whale" },
+            { question: "Who developed the theory of relativity?", options: ["Isaac Newton", "Galileo Galilei", "Albert Einstein", "Nikola Tesla"], correct: "Albert Einstein" },
+            { question: "Which ocean is the largest by surface area?", options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"], correct: "Pacific Ocean" },
+            { question: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Venus", "Jupiter"], correct: "Mars" },
+            { question: "Which gas do plants absorb from the atmosphere?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Helium"], correct: "Carbon Dioxide" },
+            { question: "What color is the sky on a clear day?", options: ["Red", "Blue", "Green", "Yellow"], correct: "Blue" },
+            { question: "How many continents are there on Earth?", options: ["5", "6", "7", "8"], correct: "7" }
+        ];
+
+        const quizContainer = document.getElementById('quiz');
+        const resultsContainer = document.getElementById('results');
+        const submitButton = document.getElementById('submit');
+        let currentQuestion = {};
+
+        function createQuiz(question) {
+            quizContainer.innerHTML = ''; 
+            const questionHtml = `
+                <h3>${question.question}</h3>
+                ${question.options.map(option => `
+                    <label>
+                        <input type="radio" name="question" value="${option}">
+                        ${option}
+                    </label><br>
+                `).join('')}
+                <br>
+            `;
+            quizContainer.innerHTML += questionHtml;
+        }
+
+        function showResults(question) {
+            let score = 0;
+            const selectedOption = document.querySelector(`input[name="question"]:checked`);
+            if (selectedOption) {
+                const isCorrect = selectedOption.value === question.correct;
+                selectedOption.parentElement.style.color = isCorrect ? 'green' : 'red';
+                if (isCorrect) score++;
+            }
+            resultsContainer.innerHTML = `You scored ${score} out of 1`;
+        }
+
+        function getRandomQuestion() {
+            const randomIndex = Math.floor(Math.random() * quizData.length);
+            return quizData[randomIndex];
+        }
+
+        function startQuiz() {
+            currentQuestion = getRandomQuestion();
+            createQuiz(currentQuestion);
+        }
+
+        submitButton.addEventListener('click', () => {
+            showResults(currentQuestion);
+            setTimeout(() => {
+                resultsContainer.innerHTML = ''; 
+                startQuiz(); 
+            }, 2000); 
+        });
+
+        startQuiz(); 
+    </script>
+</body>
+</html>
